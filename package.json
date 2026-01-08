@@ -1,0 +1,44 @@
+{
+  "name": "@lumifyai/widget",
+  "version": "1.0.0",
+  "description": "Self-contained AI search widget for any website. Add intelligent search to your site with a single script tag.",
+  "main": "dist/lumify-widget.js",
+  "module": "dist/lumify-widget.js",
+  "unpkg": "dist/lumify-widget.min.js",
+  "jsdelivr": "dist/lumify-widget.min.js",
+  "types": "dist/lumify-widget.d.ts",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "cp src/lumify-widget.js dist/lumify-widget.js && uglifyjs dist/lumify-widget.js -o dist/lumify-widget.min.js -c -m",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lumifyai/lumify-widget.git"
+  },
+  "keywords": [
+    "search",
+    "widget",
+    "ai",
+    "lumify",
+    "ai-search",
+    "site-search",
+    "webflow",
+    "embed",
+    "chatbot"
+  ],
+  "author": "Lumify <hello@lumify.ai>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lumifyai/lumify-widget/issues"
+  },
+  "homepage": "https://www.lumify.ai",
+  "devDependencies": {
+    "uglify-js": "^3.17.4"
+  }
+}
+

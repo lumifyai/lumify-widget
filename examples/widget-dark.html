@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumify Widget - Dark Theme Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #e5e7eb;
+            background: #0f172a;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #a78bfa, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #9ca3af;
+        }
+        
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .card h2 {
+            margin-bottom: 16px;
+            color: #f1f5f9;
+        }
+        
+        .card p {
+            color: #94a3b8;
+            margin-bottom: 24px;
+        }
+        
+        .code-block {
+            background: #0f172a;
+            color: #a5b4fc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .option {
+            padding: 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+        }
+        
+        .option-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        
+        .option-value {
+            color: #a5b4fc;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Dark Theme Demo</h1>
+            <p>The widget automatically adapts to dark mode</p>
+        </div>
+        
+        <div class="card">
+            <h2>Dark Theme Configuration</h2>
+            <p>Force dark theme with <code>data-theme="dark"</code>, or use <code>data-theme="auto"</code> to follow system preference.</p>
+            
+            <div class="code-block">
+&lt;script 
+  src="https://www.lumify.ai/api/v1/js/lumify-widget.js"
+  data-api-key="YOUR_API_KEY"
+  data-app-id="YOUR_APP_ID"
+  data-theme="dark"
+  data-accent-color="#a78bfa"
+  data-button-text="Ask AI"&gt;
+&lt;/script&gt;
+            </div>
+            
+            <div class="options">
+                <div class="option">
+                    <div class="option-label">Theme</div>
+                    <div class="option-value">dark</div>
+                </div>
+                <div class="option">
+                    <div class="option-label">Accent Color</div>
+                    <div class="option-value">#a78bfa</div>
+                </div>
+                <div class="option">
+                    <div class="option-label">Button Text</div>
+                    <div class="option-value">"Ask AI"</div>
+                </div>
+                <div class="option">
+                    <div class="option-label">Position</div>
+                    <div class="option-value">bottom-right</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script 
+        src="https://www.lumify.ai/api/v1/js/lumify-widget.js"
+        data-api-key="demo-key"
+        data-app-id="demo-app"
+        data-theme="dark"
+        data-accent-color="#a78bfa"
+        data-button-text="Ask AI"
+        data-placeholder="What would you like to know?">
+    </script>
+</body>
+</html>
+

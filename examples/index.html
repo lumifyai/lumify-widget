@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumify Widget Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f9fafb;
+            min-height: 100vh;
+            padding: 60px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+        
+        .examples {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .example {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        
+        .example:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .example-info {
+            flex: 1;
+        }
+        
+        .example-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .example-description {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .example-arrow {
+            color: #9ca3af;
+            font-size: 20px;
+        }
+        
+        .example:hover .example-arrow {
+            color: #6366f1;
+            transform: translateX(4px);
+        }
+        
+        .example-arrow {
+            transition: all 0.15s ease;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #e0e7ff;
+            color: #4f46e5;
+            font-size: 11px;
+            font-weight: 500;
+            border-radius: 4px;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+        
+        .badge.recommended {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        footer a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lumify Widget Examples</h1>
+        <p class="subtitle">Interactive demos of the Lumify Widget in different configurations</p>
+        
+        <div class="examples">
+            <a href="widget-floating.html" class="example">
+                <div class="example-info">
+                    <div class="example-title">
+                        Floating Button
+                        <span class="badge recommended">Recommended</span>
+                    </div>
+                    <div class="example-description">
+                        A floating button in the corner that opens a search modal. The simplest integration.
+                    </div>
+                </div>
+                <div class="example-arrow">→</div>
+            </a>
+            
+            <a href="widget-dark.html" class="example">
+                <div class="example-info">
+                    <div class="example-title">Dark Theme</div>
+                    <div class="example-description">
+                        Dark mode styling with custom accent color. Uses data-theme="dark".
+                    </div>
+                </div>
+                <div class="example-arrow">→</div>
+            </a>
+            
+            <a href="widget-inline.html" class="example">
+                <div class="example-info">
+                    <div class="example-title">Inline Mode</div>
+                    <div class="example-description">
+                        Embed the search widget directly in your page content.
+                    </div>
+                </div>
+                <div class="example-arrow">→</div>
+            </a>
+            
+            <a href="widget-trigger.html" class="example">
+                <div class="example-info">
+                    <div class="example-title">Trigger Mode</div>
+                    <div class="example-description">
+                        Attach the widget to an existing button or element on your page.
+                    </div>
+                </div>
+                <div class="example-arrow">→</div>
+            </a>
+            
+            <a href="widget-custom.html" class="example">
+                <div class="example-info">
+                    <div class="example-title">Customization Options</div>
+                    <div class="example-description">
+                        Reference for all available colors, positions, and icons.
+                    </div>
+                </div>
+                <div class="example-arrow">→</div>
+            </a>
+        </div>
+        
+        <footer>
+            <p>Lumify Widget v1.0.0 · <a href="https://www.lumify.ai">lumify.ai</a> · <a href="https://github.com/lumifyai/lumify-widget">GitHub</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+

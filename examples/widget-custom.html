@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumify Widget - Custom Styling Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fef7ed;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #6b7280;
+        }
+        
+        .examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .example-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .example-card h3 {
+            margin-bottom: 12px;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .example-card p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .positions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 24px;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .positions h3 {
+            grid-column: 1 / -1;
+            margin-bottom: 8px;
+        }
+        
+        .position-box {
+            padding: 24px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+            font-family: monospace;
+        }
+        
+        .icons-section {
+            margin-top: 24px;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .icons-section h3 {
+            margin-bottom: 16px;
+        }
+        
+        .icon-options {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .icon-option {
+            padding: 12px 20px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        
+        .all-options {
+            margin-top: 24px;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .all-options h3 {
+            margin-bottom: 16px;
+        }
+        
+        .options-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .options-table th,
+        .options-table td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .options-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .options-table code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+            font-size: 12px;
+            color: #6366f1;
+        }
+        
+        .options-table tr.required td:first-child code {
+            color: #dc2626;
+        }
+        
+        .options-table tr.required td:first-child::after {
+            content: " *";
+            color: #dc2626;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Customization Options</h1>
+            <p>The widget supports extensive customization via data attributes</p>
+        </div>
+        
+        <div class="examples">
+            <div class="example-card">
+                <h3>
+                    <span class="color-dot" style="background: #6366f1;"></span>
+                    Indigo (Default)
+                </h3>
+                <p>The default accent color</p>
+                <div class="code-block">data-accent-color="#6366f1"</div>
+            </div>
+            
+            <div class="example-card">
+                <h3>
+                    <span class="color-dot" style="background: #10b981;"></span>
+                    Emerald
+                </h3>
+                <p>A fresh green theme</p>
+                <div class="code-block">data-accent-color="#10b981"</div>
+            </div>
+            
+            <div class="example-card">
+                <h3>
+                    <span class="color-dot" style="background: #f59e0b;"></span>
+                    Amber
+                </h3>
+                <p>Warm and inviting</p>
+                <div class="code-block">data-accent-color="#f59e0b"</div>
+            </div>
+            
+            <div class="example-card">
+                <h3>
+                    <span class="color-dot" style="background: #ef4444;"></span>
+                    Red
+                </h3>
+                <p>Bold and attention-grabbing</p>
+                <div class="code-block">data-accent-color="#ef4444"</div>
+            </div>
+            
+            <div class="example-card">
+                <h3>
+                    <span class="color-dot" style="background: #ec4899;"></span>
+                    Pink
+                </h3>
+                <p>Playful and modern</p>
+                <div class="code-block">data-accent-color="#ec4899"</div>
+            </div>
+            
+            <div class="example-card">
+                <h3>
+                    <span class="color-dot" style="background: #1f2937;"></span>
+                    Neutral
+                </h3>
+                <p>Minimal and professional</p>
+                <div class="code-block">data-accent-color="#1f2937"</div>
+            </div>
+        </div>
+        
+        <div class="positions">
+            <h3>Button Positions</h3>
+            <div class="position-box">top-left</div>
+            <div class="position-box">top-right</div>
+            <div class="position-box">bottom-left</div>
+            <div class="position-box">bottom-right (default)</div>
+        </div>
+        
+        <div class="icons-section">
+            <h3>Button Icons</h3>
+            <div class="icon-options">
+                <div class="icon-option">data-button-icon="search" (default)</div>
+                <div class="icon-option">data-button-icon="chat"</div>
+                <div class="icon-option">data-button-icon="help"</div>
+                <div class="icon-option">data-button-icon="none"</div>
+            </div>
+        </div>
+        
+        <div class="all-options">
+            <h3>All Configuration Options</h3>
+            <table class="options-table">
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="required">
+                        <td><code>data-api-key</code></td>
+                        <td>—</td>
+                        <td>Your Lumify API key (required)</td>
+                    </tr>
+                    <tr class="required">
+                        <td><code>data-app-id</code></td>
+                        <td>—</td>
+                        <td>Your application ID (required)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-mode</code></td>
+                        <td>"floating"</td>
+                        <td>"floating" | "inline" | "trigger"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-theme</code></td>
+                        <td>"auto"</td>
+                        <td>"light" | "dark" | "auto" (follows system)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-accent-color</code></td>
+                        <td>#6366f1</td>
+                        <td>Any CSS color value</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-position</code></td>
+                        <td>"bottom-right"</td>
+                        <td>"bottom-right" | "bottom-left" | "top-right" | "top-left"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-button-icon</code></td>
+                        <td>"search"</td>
+                        <td>"search" | "chat" | "help" | "none"</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-button-text</code></td>
+                        <td>""</td>
+                        <td>Optional text next to floating button</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-modal-title</code></td>
+                        <td>"Search"</td>
+                        <td>Title shown in modal header</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-placeholder</code></td>
+                        <td>"Ask anything..."</td>
+                        <td>Input field placeholder text</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-empty-text</code></td>
+                        <td>"Ask a question to get started"</td>
+                        <td>Message shown before first search</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-keyboard-shortcut</code></td>
+                        <td>"true"</td>
+                        <td>Enable Cmd/Ctrl+K shortcut</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-show-branding</code></td>
+                        <td>"true"</td>
+                        <td>Show "Powered by Lumify" footer</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-z-index</code></td>
+                        <td>9999</td>
+                        <td>CSS z-index for widget</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-trigger-selector</code></td>
+                        <td>—</td>
+                        <td>CSS selector for trigger mode</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-container-selector</code></td>
+                        <td>—</td>
+                        <td>CSS selector for inline mode container</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Using amber color for this demo -->
+    <script 
+        src="https://www.lumify.ai/api/v1/js/lumify-widget.js"
+        data-api-key="demo-key"
+        data-app-id="demo-app"
+        data-accent-color="#f59e0b"
+        data-button-text="Help"
+        data-button-icon="help"
+        data-position="bottom-right"
+        data-modal-title="Help Center"
+        data-placeholder="How can we help you today?"
+        data-empty-text="Ask us anything about our product">
+    </script>
+</body>
+</html>
+
