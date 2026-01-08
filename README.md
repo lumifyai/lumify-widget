@@ -166,9 +166,7 @@ Visit [lumify.ai/api/v1/examples](https://www.lumify.ai/api/v1/examples/) to see
 
 ## Platform Guides
 
-- [Webflow Integration](https://www.lumify.ai/docs/integrations/webflow)
-- [WordPress Integration](https://www.lumify.ai/docs/integrations/wordpress)
-- [Shopify Integration](https://www.lumify.ai/docs/integrations/shopify)
+- Coming Soon
 
 ## API Reference
 
@@ -204,7 +202,7 @@ MIT © [Lumify](https://www.lumify.ai)
 
 ## Support
 
-- 📧 Email: hello@lumify.ai
+- 📧 Email: support@lumify.ai
 - 🐛 Issues: [GitHub Issues](https://github.com/lumifyai/lumify-widget/issues)
-- 📖 Docs: [lumify.ai/docs](https://www.lumify.ai/docs)
+- 📖 Docs: [docs.lumify.ai](https://docs.lumify.ai/)
 
