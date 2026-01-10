@@ -166,7 +166,7 @@ Visit [lumify.ai/api/v1/examples](https://www.lumify.ai/api/v1/examples/) to see
 
 ## Platform Guides
 
-- Coming Soon
+- Webflow Integration Guide [https://docs.lumify.ai/webflow-guide]
 
 ## API Reference
 
