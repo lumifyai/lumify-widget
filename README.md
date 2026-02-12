@@ -88,6 +88,18 @@ All configuration is done via `data-*` attributes on the script tag:
 | `data-keyboard-shortcut` | `"true"` | Enable Cmd/Ctrl+K shortcut |
 | `data-show-branding` | `"true"` | Show "Powered by Lumify" footer |
 
+### Popular Questions
+
+Show commonly asked questions when users focus on the search input:
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `data-popular-questions` | `"false"` | Enable popular questions |
+| `data-popular-questions-max` | `5` | Maximum questions to show (1-10) |
+| `data-popular-questions-cache` | `"localStorage"` | `"localStorage"` \| `"sessionStorage"` \| `"none"` |
+| `data-popular-questions-ttl` | `86400` | Cache lifetime in seconds |
+| `data-popular-questions-fallback` | `[]` | JSON array of fallback questions |
+
 ### Mode-Specific Options
 
 | Attribute | Description |
@@ -157,6 +169,18 @@ All configuration is done via `data-*` attributes on the script tag:
   data-app-id="YOUR_APP_ID"
   data-mode="inline"
   data-container-selector="#search-container">
+</script>
+```
+
+### With Popular Questions
+
+```html
+<script 
+  src="https://www.lumify.ai/api/v1/js/lumify-widget.js"
+  data-api-key="YOUR_API_KEY"
+  data-app-id="YOUR_APP_ID"
+  data-popular-questions="true"
+  data-popular-questions-max="5">
 </script>
 ```
 

@@ -1,5 +1,5 @@
 /**
- * Lumify Widget v1.0.0
+ * Lumify Widget v1.1.0
  * 
  * A self-contained, zero-config widget for adding AI-powered search to any website.
  * Simply add a script tag with your API credentials and the widget handles everything.
@@ -26,9 +26,11 @@
  *   data-modal-title: string (default: "Search")
  *   data-trigger-selector: CSS selector for trigger mode
  *   data-container-selector: CSS selector for inline mode container
+ *   data-popular-questions: "true" | "false" (default: "false") - Enable popular questions
+ *   data-popular-questions-fallback: JSON array string of fallback questions
  * 
  * @author Lumify
- * @version 1.0.0
+ * @version 1.1.0
  * @license MIT
  */
 
@@ -60,7 +62,16 @@
         modalTitle: 'Search',
         apiEndpoint: '/api/v1/search.php',
         answerMode: true,
-        similarQuestions: false
+        similarQuestions: false,
+        ctaTarget: '_self',  // Link target for CTAs: '_self' (same window) or '_blank' (new tab)
+        // Popular Questions configuration
+        popularQuestions: {
+            enabled: false,
+            maxDisplay: 5,
+            cacheStrategy: 'localStorage',
+            cacheTTL: 86400, // 24 hours
+            fallback: []
+        }
     };
 
     // =========================================================================
@@ -397,6 +408,72 @@
     color: var(--lw-text-light);
 }
 
+/* Structural CTA - Call-to-action links */
+.lumify-widget-cta {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--lw-border);
+}
+
+.lumify-widget-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--lw-cta-color, #7c3aed);
+    font-size: calc(var(--lw-font-size, 15px) * 1.05);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.lumify-widget-cta-link:hover {
+    color: var(--lw-cta-hover, #6d28d9);
+}
+
+.lumify-widget-cta-link:hover .lumify-widget-cta-badge {
+    background: var(--lw-cta-hover, #6d28d9);
+    transform: translateX(2px);
+}
+
+.lumify-widget-cta-text {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.lumify-widget-cta-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--lw-cta-color, #7c3aed);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.lumify-widget-cta-badge svg {
+    width: 12px;
+    height: 12px;
+    color: white;
+}
+
+/* Dark theme CTA */
+.lw-theme-dark .lumify-widget-cta-link {
+    color: var(--lw-cta-color, #a78bfa);
+}
+
+.lw-theme-dark .lumify-widget-cta-link:hover {
+    color: var(--lw-cta-hover, #c4b5fd);
+}
+
+.lw-theme-dark .lumify-widget-cta-badge {
+    background: var(--lw-cta-color, #a78bfa);
+}
+
+.lw-theme-dark .lumify-widget-cta-link:hover .lumify-widget-cta-badge {
+    background: var(--lw-cta-hover, #c4b5fd);
+}
+
 /* Error state */
 .lumify-widget-error {
     padding: 16px;
@@ -418,6 +495,54 @@
     text-align: center;
     color: var(--lw-text-muted);
     font-size: 14px;
+}
+
+/* Popular Questions */
+.lumify-widget-popular {
+    padding: 16px 0 0;
+}
+
+.lumify-widget-popular.lw-hidden {
+    display: none;
+}
+
+.lumify-widget-popular-header {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--lw-text-muted);
+    margin-bottom: 12px;
+}
+
+.lumify-widget-popular-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lumify-widget-popular-item {
+    padding: 12px 14px;
+    background: var(--lw-bg-secondary);
+    border: 1px solid var(--lw-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 14px;
+    color: var(--lw-text);
+    line-height: 1.4;
+}
+
+.lumify-widget-popular-item:hover {
+    background: var(--lw-bg-tertiary);
+    border-color: var(--lw-accent);
+    color: var(--lw-accent);
+    transform: translateX(4px);
+}
+
+.lumify-widget-popular-item:active {
+    transform: translateX(2px);
 }
 
 /* Citation chips */
@@ -865,14 +990,18 @@
 
     /**
      * Create HTML for a citation chip with hover tooltip
+     * @param {number} num - Citation number
+     * @param {Object} source - Source object with url, title, etc.
+     * @param {string} linkTarget - Link target (_self or _blank)
      */
-    function createCitationChip(num, source) {
+    function createCitationChip(num, source, linkTarget = '_blank') {
         const url = escapeHtml(source.url || '');
         const title = escapeHtml(source.title || source.page_title || extractDomain(source.url));
         const displayUrl = formatDisplayUrl(source.url);
         const faviconUrl = getFaviconUrl(source.url);
+        const rel = linkTarget === '_blank' ? 'rel="noopener noreferrer"' : '';
         
-        return `<a href="${url}" target="_blank" rel="noopener" class="lumify-widget-citation" data-citation="${num}">
+        return `<a href="${url}" target="${linkTarget}" ${rel} class="lumify-widget-citation" data-citation="${num}">
             ${num}
             <span class="lumify-widget-citation-tooltip">
                 <span class="lumify-widget-citation-tooltip-content">
@@ -889,19 +1018,39 @@
     }
 
     /**
-     * Format answer text with citation links and tooltips
+     * Format answer text with citation links, markdown links, and tooltips
+     * @param {string} text - Answer text with [n] citation markers and/or markdown links
+     * @param {Array} sources - Array of source objects
+     * @param {string} linkTarget - Link target for all links (_self or _blank)
      */
-    function formatAnswerWithCitations(text, sources) {
+    function formatAnswerWithCitations(text, sources, linkTarget = '_blank') {
         if (!text) return '';
         
-        let html = escapeHtml(text).replace(/\n/g, '<br>');
+        // Step 1: Extract and protect markdown links [text](url) before escaping
+        // Store them with placeholders to restore after HTML escaping
+        const linkPlaceholders = [];
+        let protectedText = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
+            const placeholder = `__LINK_PLACEHOLDER_${linkPlaceholders.length}__`;
+            const rel = linkTarget === '_blank' ? ' rel="noopener noreferrer"' : '';
+            linkPlaceholders.push(`<a href="${escapeHtml(url)}" target="${linkTarget}"${rel}>${escapeHtml(linkText)}</a>`);
+            return placeholder;
+        });
         
+        // Step 2: Escape remaining HTML and convert newlines
+        let html = escapeHtml(protectedText).replace(/\n/g, '<br>');
+        
+        // Step 3: Restore markdown links from placeholders
+        linkPlaceholders.forEach((link, index) => {
+            html = html.replace(`__LINK_PLACEHOLDER_${index}__`, link);
+        });
+        
+        // Step 4: Replace citation markers [1], [2] with citation chips
         if (sources && sources.length > 0) {
             html = html.replace(/\[(\d+)\]/g, (match, num) => {
                 const index = parseInt(num, 10) - 1;
                 if (index >= 0 && index < sources.length) {
                     const source = sources[index];
-                    return createCitationChip(num, source);
+                    return createCitationChip(num, source, linkTarget);
                 }
                 return match;
             });
@@ -917,11 +1066,17 @@
     class LumifyWidget {
         constructor(config) {
             this.config = { ...DEFAULTS, ...config };
+            // Merge popularQuestions config properly
+            this.config.popularQuestions = { ...DEFAULTS.popularQuestions, ...config.popularQuestions };
             this.baseUrl = config.baseUrl || '';
             this.isOpen = false;
             this.isLoading = false;
             this.currentSearch = null;
             this.elements = {};
+            
+            // Popular questions state
+            this._popularQuestionsData = null;
+            this._popularQuestionsVisible = false;
             
             this._init();
         }
@@ -1080,6 +1235,7 @@
             // Create results area
             const results = document.createElement('div');
             results.className = 'lumify-widget-results';
+            results.innerHTML = this._getEmptyState();
             
             // Store references
             this.elements.root = root;
@@ -1089,6 +1245,11 @@
             root.appendChild(searchForm);
             root.appendChild(results);
             container.appendChild(root);
+            
+            // Initialize popular questions for inline mode
+            if (this.config.popularQuestions.enabled) {
+                this._initPopularQuestions();
+            }
         }
 
         /**
@@ -1210,6 +1371,21 @@
             input.setAttribute('autocomplete', 'off');
             input.setAttribute('maxlength', '500');
             
+            // Popular questions visibility handlers
+            if (this.config.popularQuestions.enabled) {
+                input.addEventListener('input', () => {
+                    if (input.value.trim().length > 0) {
+                        this._hidePopularQuestions();
+                    }
+                });
+                
+                input.addEventListener('focus', () => {
+                    if (!input.value.trim() && this._popularQuestionsData?.length > 0) {
+                        this._showPopularQuestions();
+                    }
+                });
+            }
+            
             const submit = document.createElement('button');
             submit.type = 'submit';
             submit.className = 'lumify-widget-submit';
@@ -1249,12 +1425,24 @@
          * Get empty state HTML
          */
         _getEmptyState() {
-            return `
+            let html = `
                 <div class="lumify-widget-empty">
                     <div class="lumify-widget-empty-icon">${ICONS.search}</div>
                     <div class="lumify-widget-empty-text">${this.config.emptyText}</div>
                 </div>
             `;
+            
+            // Add popular questions container if enabled (starts hidden)
+            if (this.config.popularQuestions.enabled) {
+                html += `
+                    <div class="lumify-widget-popular lw-hidden">
+                        <div class="lumify-widget-popular-header">Popular questions:</div>
+                        <ul class="lumify-widget-popular-list"></ul>
+                    </div>
+                `;
+            }
+            
+            return html;
         }
 
         /**
@@ -1310,6 +1498,13 @@
                     this.elements.input.focus();
                 }
             }, 100);
+            
+            // Initialize popular questions on first open
+            if (this.config.popularQuestions.enabled && !this._popularQuestionsData) {
+                this._initPopularQuestions();
+            } else if (this._popularQuestionsData && !this.elements.input?.value.trim()) {
+                this._showPopularQuestions();
+            }
             
             // Prevent body scroll
             document.body.style.overflow = 'hidden';
@@ -1425,12 +1620,22 @@
             
             let html = '';
             
+            // Get link target from API response metadata, fall back to widget config, then default
+            const linkTarget = data.metadata?.link_target || this.config.ctaTarget || '_self';
+            
             // Display answer
             if (data.direct_answer?.answer) {
                 const sources = data.direct_answer.sources || [];
-                const answerHtml = formatAnswerWithCitations(data.direct_answer.answer, sources);
+                const answerHtml = formatAnswerWithCitations(data.direct_answer.answer, sources, linkTarget);
                 
                 html += `<div class="lumify-widget-answer">${answerHtml}</div>`;
+                
+                // Display structural CTA if present
+                if (data.direct_answer?.cta) {
+                    const cta = data.direct_answer.cta;
+                    // Pass linkTarget as fallback for CTA if not set in cta.target
+                    html += this._renderCTA(cta, linkTarget);
+                }
                 
                 if (data.confidence_score) {
                     html += `<div class="lumify-widget-confidence">Confidence: ${Math.round(data.confidence_score * 100)}%</div>`;
@@ -1514,6 +1719,48 @@
         }
 
         /**
+         * Render structural CTA with ion violet badge
+         * 
+         * CTAs are displayed at the end of answers to direct users to
+         * relevant structural pages (login, password reset, order tracking, etc.)
+         * 
+         * @param {Object} cta - CTA object with text, url, type, title, target
+         * @param {string} fallbackTarget - Fallback target from API metadata
+         * @returns {string} HTML string
+         */
+        _renderCTA(cta, fallbackTarget = '_self') {
+            if (!cta || !cta.url || !cta.text) {
+                return '';
+            }
+            
+            const escapedText = escapeHtml(cta.text);
+            const escapedUrl = escapeHtml(cta.url);
+            const escapedTitle = escapeHtml(cta.title || cta.text);
+            
+            // Use target from CTA response (per-answer override), then API metadata, then widget config
+            const target = cta.target || fallbackTarget || this.config.ctaTarget || '_self';
+            // Only add rel="noopener noreferrer" for external links (_blank)
+            const rel = target === '_blank' ? 'rel="noopener noreferrer"' : '';
+            
+            return `
+                <div class="lumify-widget-cta">
+                    <a href="${escapedUrl}" 
+                       target="${target}" 
+                       ${rel}
+                       class="lumify-widget-cta-link"
+                       title="${escapedTitle}">
+                        <span class="lumify-widget-cta-text">${escapedText}</span>
+                        <span class="lumify-widget-cta-badge" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+            `;
+        }
+
+        /**
          * Display error
          */
         _displayError(message) {
@@ -1550,6 +1797,202 @@
             if (this.elements.input) {
                 this.elements.input.value = query;
             }
+            this._performSearch();
+        }
+
+        /**
+         * Initialize popular questions feature
+         */
+        async _initPopularQuestions() {
+            if (!this.config.popularQuestions.enabled) return;
+            
+            const questions = await this._loadPopularQuestions();
+            if (questions && questions.length > 0) {
+                this._renderPopularQuestions(questions);
+                this._showPopularQuestions();
+            }
+        }
+
+        /**
+         * Load popular questions from cache or API
+         */
+        async _loadPopularQuestions() {
+            // Try cache first
+            const cached = this._getCachedPopularQuestions();
+            if (cached) {
+                this._popularQuestionsData = cached;
+                return cached;
+            }
+            
+            // Show fallback immediately while fetching
+            if (this.config.popularQuestions.fallback.length > 0) {
+                this._popularQuestionsData = this.config.popularQuestions.fallback;
+                this._renderPopularQuestions(this.config.popularQuestions.fallback);
+                this._showPopularQuestions();
+            }
+            
+            // Fetch from API
+            try {
+                const questions = await this._fetchPopularQuestions();
+                if (questions && questions.length > 0) {
+                    this._popularQuestionsData = questions;
+                    this._setCachedPopularQuestions(questions);
+                    if (this._popularQuestionsVisible) {
+                        this._renderPopularQuestions(questions);
+                    }
+                }
+                return questions;
+            } catch (error) {
+                console.warn('LumifyWidget: Failed to fetch popular questions:', error);
+                return this.config.popularQuestions.fallback;
+            }
+        }
+
+        /**
+         * Fetch popular questions from API
+         */
+        async _fetchPopularQuestions() {
+            const endpoint = this._getPopularQuestionsEndpoint();
+            
+            const response = await fetch(`${endpoint}?app_id=${encodeURIComponent(this.config.appId)}&limit=${this.config.popularQuestions.maxDisplay}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.config.apiKey}`
+                }
+            });
+            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            const data = await response.json();
+            if (data.success && data.questions) {
+                if (data.cache_hint) {
+                    this.config.popularQuestions.cacheTTL = data.cache_hint;
+                }
+                return data.questions;
+            }
+            return [];
+        }
+
+        /**
+         * Get the popular questions endpoint URL
+         */
+        _getPopularQuestionsEndpoint() {
+            if (this.config.apiEndpoint.includes('/search.php')) {
+                return this.config.apiEndpoint.replace('/search.php', '/popular-questions.php');
+            }
+            const baseUrl = this.config.apiEndpoint.substring(0, this.config.apiEndpoint.lastIndexOf('/'));
+            return baseUrl + '/popular-questions.php';
+        }
+
+        /**
+         * Get cached popular questions
+         */
+        _getCachedPopularQuestions() {
+            if (this.config.popularQuestions.cacheStrategy === 'none') return null;
+            
+            const storage = this.config.popularQuestions.cacheStrategy === 'sessionStorage' 
+                ? sessionStorage : localStorage;
+            const cacheKey = `lumify_popular_${this.config.appId}`;
+            
+            try {
+                const cached = storage.getItem(cacheKey);
+                if (!cached) return null;
+                
+                const data = JSON.parse(cached);
+                const now = Date.now() / 1000;
+                
+                if (data.timestamp && (now - data.timestamp) < this.config.popularQuestions.cacheTTL) {
+                    return data.questions;
+                }
+                storage.removeItem(cacheKey);
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /**
+         * Set cached popular questions
+         */
+        _setCachedPopularQuestions(questions) {
+            if (this.config.popularQuestions.cacheStrategy === 'none') return;
+            
+            const storage = this.config.popularQuestions.cacheStrategy === 'sessionStorage' 
+                ? sessionStorage : localStorage;
+            const cacheKey = `lumify_popular_${this.config.appId}`;
+            
+            try {
+                storage.setItem(cacheKey, JSON.stringify({
+                    questions: questions,
+                    timestamp: Date.now() / 1000
+                }));
+            } catch (e) {
+                console.warn('LumifyWidget: Failed to cache popular questions:', e);
+            }
+        }
+
+        /**
+         * Render popular questions
+         */
+        _renderPopularQuestions(questions) {
+            const container = this.elements.results;
+            if (!container) return;
+            
+            const popularContainer = container.querySelector('.lumify-widget-popular');
+            if (!popularContainer) return;
+            
+            const list = popularContainer.querySelector('.lumify-widget-popular-list');
+            if (!list) return;
+            
+            list.innerHTML = questions.map(q => `
+                <li class="lumify-widget-popular-item" data-question="${escapeHtml(q)}">${escapeHtml(q)}</li>
+            `).join('');
+            
+            // Add click handlers
+            list.querySelectorAll('.lumify-widget-popular-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const question = item.dataset.question;
+                    this._selectPopularQuestion(question);
+                });
+            });
+        }
+
+        /**
+         * Show popular questions
+         */
+        _showPopularQuestions() {
+            const container = this.elements.results?.querySelector('.lumify-widget-popular');
+            if (container && this._popularQuestionsData?.length > 0) {
+                container.classList.remove('lw-hidden');
+                this._popularQuestionsVisible = true;
+                
+                // Hide the empty state
+                const emptyState = this.elements.results?.querySelector('.lumify-widget-empty');
+                if (emptyState) emptyState.style.display = 'none';
+            }
+        }
+
+        /**
+         * Hide popular questions
+         */
+        _hidePopularQuestions() {
+            const container = this.elements.results?.querySelector('.lumify-widget-popular');
+            if (container) {
+                container.classList.add('lw-hidden');
+                this._popularQuestionsVisible = false;
+            }
+        }
+
+        /**
+         * Handle selection of a popular question
+         */
+        _selectPopularQuestion(question) {
+            if (this.elements.input) {
+                this.elements.input.value = question;
+                this.elements.input.focus();
+            }
+            this._hidePopularQuestions();
             this._performSearch();
         }
 
@@ -1596,6 +2039,17 @@
             baseUrl = url.origin;
         }
         
+        // Parse popular questions fallback from JSON string
+        let popularQuestionsFallback = [];
+        try {
+            const fallbackAttr = script.dataset.popularQuestionsFallback || script.getAttribute('data-popular-questions-fallback');
+            if (fallbackAttr) {
+                popularQuestionsFallback = JSON.parse(fallbackAttr);
+            }
+        } catch (e) {
+            console.warn('LumifyWidget: Invalid popular-questions-fallback JSON:', e);
+        }
+        
         // Parse configuration from data attributes
         const config = {
             apiKey: script.dataset.apiKey || script.getAttribute('data-api-key'),
@@ -1614,7 +2068,16 @@
             modalTitle: script.dataset.modalTitle || 'Search',
             triggerSelector: script.dataset.triggerSelector,
             containerSelector: script.dataset.containerSelector,
-            baseUrl: baseUrl
+            ctaTarget: script.dataset.ctaTarget || '_self',
+            baseUrl: baseUrl,
+            // Popular questions configuration
+            popularQuestions: {
+                enabled: script.dataset.popularQuestions === 'true',
+                maxDisplay: parseInt(script.dataset.popularQuestionsMax) || 5,
+                cacheStrategy: script.dataset.popularQuestionsCache || 'localStorage',
+                cacheTTL: parseInt(script.dataset.popularQuestionsTtl) || 86400,
+                fallback: popularQuestionsFallback
+            }
         };
         
         // Validate required fields
